@@ -304,346 +304,343 @@
                 </div>
             </div>
         </div>
-    </section>
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il Nostro Menu</title>
-    <link href="/path/to/your/output.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-    <style>
-        /* Definizione dei colori di Tailwind per renderli disponibili anche nel CSS inline, 
-           o assicurati che il tuo tailwind.config.js sia correttamente compilato.
-           Se non usi un processo di build per il CSS, devi definire i colori qui. */
-        :root {
-            --color-dark-blue: #1a202c;
-            --color-primary-accent: #B87333; /* Rame Brunito */
-            --color-light-text: #718096;
-            --color-light-gray-bg: #f7fafc;
-            --color-dark-text: #2d3748;
-        }
+       </section>
+<style>
+    /* Stili specifici per la barra di scorrimento per garantire il colore corretto */
+    .thin-scrollbar-container {
+        overflow-x: auto;
+        scrollbar-width: thin; /* Per Firefox */
+        scrollbar-color: #B87333 transparent; /* Colore thumb e track per Firefox */
+        -ms-overflow-style: -ms-autohiding-scrollbar; /* Per Edge legacy / IE */
+    }
 
-        /* Utilizzo di theme() in CSS puro è problematico senza PostCSS e plugin Tailwind.
-           Se stai incollando questo direttamente in un HTML senza un processo di build
-           di Tailwind, devi usare i valori esadecimali diretti o le variabili CSS.
-           Ho aggiornato per usare i codici esadecimali diretti. */
+    /* Stili della scrollbar per browser basati su Webkit (Chrome, Safari, Edge moderno) */
+    .thin-scrollbar-container::-webkit-scrollbar {
+        height: 4px; /* Altezza della scrollbar orizzontale */
+    }
+    .thin-scrollbar-container::-webkit-scrollbar-track {
+        background: transparent; /* Track trasparente */
+    }
+    .thin-scrollbar-container::-webkit-scrollbar-thumb {
+        background-color: #B87333 !important; /* Colore del "pollice" della scrollbar - FONDAMENTALE */
+        border-radius: 20px;
+        border: 1px solid #B87333 !important; /* Bordo dello stesso colore per coerenza */
+    }
 
-        /* Custom thin scrollbar for menu buttons */
-        .thin-scrollbar-container {
-            overflow-x: auto;
-            scrollbar-width: thin; /* Per Firefox */
-            scrollbar-color: #B87333 transparent; /* Colore thumb e track per Firefox */
-            /* Per Edge legacy / IE, ma è meno rilevante oggi */
-            -ms-overflow-style: -ms-autohiding-scrollbar; 
-        }
+    /* Stili per le categorie del menu */
+    .menu-category {
+        display: none;
+    }
 
-        /* Stili della scrollbar per browser basati su Webkit (Chrome, Safari, Edge moderno) */
-        .thin-scrollbar-container::-webkit-scrollbar {
-            height: 4px; /* Altezza della scrollbar orizzontale */
-        }
-        .thin-scrollbar-container::-webkit-scrollbar-track {
-            background: transparent; /* Track trasparente */
-        }
-        .thin-scrollbar-container::-webkit-scrollbar-thumb {
-            /* Colore del "pollice" della scrollbar - FONDAMENTALE */
-            background-color: #B87333 !important; 
-            border-radius: 20px; 
-            border: 1px solid #B87333 !important; /* Bordo dello stesso colore per coerenza */
-        }
-    </style>
-</head>
-<body>
+    .menu-category.active {
+        display: grid; /* o block per mobile, come definito nella media query */
+        animation: fadeIn 0.5s ease-in-out forwards; /* Animazione di fade-in */
+    }
 
-    <section id="menu" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl md:text-5xl font-display font-bold text-dark-blue mb-4">Il Nostro Menu</h2>
-                <div class="w-16 h-1 bg-primary-accent mx-auto mb-6"></div>
-                <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
-                    Un viaggio gastronomico tra i sapori autentici del mare e la raffinata arte culinaria francese.
-                </p>
-                <a href="#" class="inline-block mt-6 px-6 py-3 bg-dark-blue text-white rounded-lg shadow-lg hover:bg-primary-accent hover:text-dark-blue transition duration-300 font-bold text-lg">
-                    Scarica il menu completo in PDF <i class="fas fa-download ml-2"></i>
-                </a>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Stili del bottone attivo del menu */
+    .menu-category-button.active {
+        background-color: #B87333 !important; /* Forzato il colore Rame Brunito */
+        color: #0A1128 !important; /* Testo Blu Profondo per contrasto */
+    }
+
+    /* Stili base per i bottoni non attivi, inclusi gli hover */
+    .menu-category-button {
+        transition: background-color 0.3s ease, color 0.3s ease;
+        cursor: pointer;
+    }
+</style>
+
+<section id="menu" class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-display font-bold text-dark-blue mb-4">Il Nostro Menu</h2>
+            <div class="w-16 h-1 bg-primary-accent mx-auto mb-6"></div>
+            <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
+                Un viaggio gastronomico tra i sapori autentici del mare e la raffinata arte culinaria francese.
+            </p>
+            <a href="#" class="inline-block mt-6 px-6 py-3 bg-dark-blue text-white rounded-lg shadow-lg hover:bg-primary-accent hover:text-dark-blue transition duration-300 font-bold text-lg">
+                Scarica il menu completo in PDF <i class="fas fa-download ml-2"></i>
+            </a>
+        </div>
+
+        <div class="thin-scrollbar-container pb-4 mb-8">
+            <div class="flex space-x-3 md:space-x-4 lg:space-x-6 flex-nowrap justify-start md:justify-center thin-scrollbar">
+                <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold active" data-category="antipasti">Antipasti</button>
+                <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="primi">Primi</button>
+                <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="secondi">Secondi</button>
+                <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="contorni">Contorni</button>
+                <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="dolci">Dolci</button>
+                <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="bevande">Bevande</button>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-x-12 gap-y-10">
+            <div id="antipasti" class="menu-category active">
+                <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Antipasti</h3>
+                <div class="space-y-7">
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Tartare di Tonno</h4>
+                            <span class="text-primary-accent font-bold text-lg">€16</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Tonno fresco di prima scelta, avocado, semi di sesamo e un tocco di salsa allo zenzero e lime.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Cozze alla Marinara</h4>
+                            <span class="text-primary-accent font-bold text-lg">€14</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Le nostre cozze locali, delicatamente preparate con pomodoro datterino, aglio profumato e prezzemolo fresco.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Bruschetta al Salmone Affumicato</h4>
+                            <span class="text-primary-accent font-bold text-lg">€12</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Fette di pane tostato, salmone affumicato di qualità superiore, crema di formaggio fresco e aneto.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Carpaccio di Polpo con Patate</h4>
+                            <span class="text-primary-accent font-bold text-lg">€15</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Sottili fette di polpo lessato, servite con patate novelle e emulsione al limone e prezzemolo.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Ostriche Fines de Claire (3 pezzi)</h4>
+                            <span class="text-primary-accent font-bold text-lg">€18</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Tre ostriche freschissime Fines de Claire, servite con vinaigrette allo scalogno.</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="thin-scrollbar-container pb-4 mb-8">
-                <div class="flex space-x-3 md:space-x-4 lg:space-x-6 flex-nowrap justify-start md:justify-center thin-scrollbar">
-                    <button class="menu-category-button px-5 py-2 bg-primary-accent text-dark-blue rounded-full whitespace-nowrap text-sm md:text-base font-semibold active" data-category="antipasti">Antipasti</button>
-                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="primi">Primi</button>
-                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="secondi">Secondi</button>
-                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="contorni">Contorni</button>
-                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="dolci">Dolci</button>
-                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="bevande">Bevande</button>
+            <div id="primi" class="menu-category">
+                <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Primi</h3>
+                <div class="space-y-7">
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Spaghetti alle Vongole Veraci</h4>
+                            <span class="text-primary-accent font-bold text-lg">€18</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Pasta artigianale con vongole veraci, un soffritto leggero di aglio, prezzemolo e un pizzico di peperoncino.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Risotto alla Pescatora</h4>
+                            <span class="text-primary-accent font-bold text-lg">€20</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Riso Carnaroli con un ricco misto di frutti di mare freschi e un velo di zafferano.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Ravioli di Branzino Fatti in Casa</h4>
+                            <span class="text-primary-accent font-bold text-lg">€22</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Pasta fresca ripiena di branzino, condita con burro fuso aromatizzato alla salvia fresca.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Gnocchi Neri con Gamberi e Zucchine</h4>
+                            <span class="text-primary-accent font-bold text-lg">€19</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Gnocchi artigianali al nero di seppia, spadellati con gamberi freschi e zucchine croccanti.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Zuppa di Pesce del Giorno</h4>
+                            <span class="text-primary-accent font-bold text-lg">€24</span>
+                        </div>
+                        <p class="text-light-text text-sm mt-1">Un ricco brodo di pesce con varietà di pescato fresco, servito con crostini di pane.</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-x-12 gap-y-10">
-                <div id="antipasti" class="menu-category active">
-                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Antipasti</h3>
-                    <div class="space-y-7">
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Tartare di Tonno</h4>
-                                <span class="text-primary-accent font-bold text-lg">€16</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Tonno fresco di prima scelta, avocado, semi di sesamo e un tocco di salsa allo zenzero e lime.</p>
+            <div id="secondi" class="menu-category">
+                <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Secondi</h3>
+                <div class="space-y-7">
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Filetto di Branzino alla Provenzale</h4>
+                            <span class="text-primary-accent font-bold text-lg">€28</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Cozze alla Marinara</h4>
-                                <span class="text-primary-accent font-bold text-lg">€14</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Le nostre cozze locali, delicatamente preparate con pomodoro datterino, aglio profumato e prezzemolo fresco.</p>
+                        <p class="text-light-text text-sm mt-1">Delicato filetto di branzino al forno, accompagnato da pomodori confit, olive nere e profumi di Provenza.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Orata al Cartoccio con Verdure</h4>
+                            <span class="text-primary-accent font-bold text-bold text-lg">€26</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Bruschetta al Salmone Affumicato</h4>
-                                <span class="text-primary-accent font-bold text-lg">€12</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Fette di pane tostato, salmone affumicato di qualità superiore, crema di formaggio fresco e aneto.</p>
+                        <p class="text-light-text text-sm mt-1">Orata intera cotta al cartoccio con patate novelle, pomodorini e un bouquet di erbe aromatiche.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Filetto di Manzo alla Rossini</h4>
+                            <span class="text-primary-accent font-bold text-lg">€32</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Carpaccio di Polpo con Patate</h4>
-                                <span class="text-primary-accent font-bold text-lg">€15</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Sottili fette di polpo lessato, servite con patate novelle e emulsione al limone e prezzemolo.</p>
+                        <p class="text-light-text text-sm mt-1">Pregiato filetto di manzo, paté de foie gras e scaglie di tartufo nero estivo.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Grigliata Mista di Mare</h4>
+                            <span class="text-primary-accent font-bold text-lg">€35</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Ostriche Fines de Claire (3 pezzi)</h4>
-                                <span class="text-primary-accent font-bold text-lg">€18</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Tre ostriche freschissime Fines de Claire, servite con vinaigrette allo scalogno.</p>
+                        <p class="text-light-text text-sm mt-1">Un assortimento generoso di pesce e crostacei freschi grigliati, con un filo d'olio d'oliva e limone.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Trancio di Salmone al Forno con Asparagi</h4>
+                            <span class="text-primary-accent font-bold text-lg">€25</span>
                         </div>
+                        <p class="text-light-text text-sm mt-1">Trancio di salmone Atlantico cotto al forno, servito con asparagi freschi di stagione.</p>
                     </div>
                 </div>
+            </div>
 
-                <div id="primi" class="menu-category">
-                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Primi</h3>
-                    <div class="space-y-7">
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Spaghetti alle Vongole Veraci</h4>
-                                <span class="text-primary-accent font-bold text-lg">€18</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Pasta artigianale con vongole veraci, un soffritto leggero di aglio, prezzemolo e un pizzico di peperoncino.</p>
+            <div id="contorni" class="menu-category">
+                <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Contorni</h3>
+                <div class="space-y-7">
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Verdure Grigliate di Stagione</h4>
+                            <span class="text-primary-accent font-bold text-lg">€8</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Risotto alla Pescatora</h4>
-                                <span class="text-primary-accent font-bold text-lg">€20</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Riso Carnaroli con un ricco misto di frutti di mare freschi e un velo di zafferano.</p>
+                        <p class="text-light-text text-sm mt-1">Selezione fresca di verdure di stagione, grigliate alla perfezione.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Patate al Forno al Profumo di Rosmarino</h4>
+                            <span class="text-primary-accent font-bold text-lg">€7</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Ravioli di Branzino Fatti in Casa</h4>
-                                <span class="text-primary-accent font-bold text-lg">€22</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Pasta fresca ripiena di branzino, condita con burro fuso aromatizzato alla salvia fresca.</p>
+                        <p class="text-light-text text-sm mt-1">Patate novelle al forno, croccanti fuori e morbide dentro, aromatizzate con rosmarino fresco.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Insalata Mista Fresca</h4>
+                            <span class="text-primary-accent font-bold text-lg">€6</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Gnocchi Neri con Gamberi e Zucchine</h4>
-                                <span class="text-primary-accent font-bold text-lg">€19</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Gnocchi artigianali al nero di seppia, spadellati con gamberi freschi e zucchine croccanti.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Zuppa di Pesce del Giorno</h4>
-                                <span class="text-primary-accent font-bold text-lg">€24</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Un ricco brodo di pesce con varietà di pescato fresco, servito con crostini di pane.</p>
-                        </div>
+                        <p class="text-light-text text-sm mt-1">Lattughe miste, pomodorini, cetrioli e carote con vinaigrette leggera.</p>
                     </div>
                 </div>
+            </div>
 
-                <div id="secondi" class="menu-category">
-                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Secondi</h3>
-                    <div class="space-y-7">
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Filetto di Branzino alla Provenzale</h4>
-                                <span class="text-primary-accent font-bold text-lg">€28</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Delicato filetto di branzino al forno, accompagnato da pomodori confit, olive nere e profumi di Provenza.</p>
+            <div id="dolci" class="menu-category">
+                <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Dolci</h3>
+                <div class="space-y-7">
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Crème Brûlée Classica</h4>
+                            <span class="text-primary-accent font-bold text-lg">€9</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Orata al Cartoccio con Verdure</h4>
-                                <span class="text-primary-accent font-bold text-bold text-lg">€26</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Orata intera cotta al cartoccio con patate novelle, pomodorini e un bouquet di erbe aromatiche.</p>
+                        <p class="text-light-text text-sm mt-1">Classica crema pasticcera alla vaniglia con una crosta di zucchero caramellato croccante.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Tiramisù della Casa</h4>
+                            <span class="text-primary-accent font-bold text-lg">€8</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Filetto di Manzo alla Rossini</h4>
-                                <span class="text-primary-accent font-bold text-lg">€32</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Pregiato filetto di manzo, paté de foie gras e scaglie di tartufo nero estivo.</p>
+                        <p class="text-light-text text-sm mt-1">Il nostro tiramisù fatto in casa con savoiardi inzuppati nel caffè, crema al mascarpone e cacao.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Mousse al Cioccolato Fondente</h4>
+                            <span class="text-primary-accent font-bold text-lg">€9</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Grigliata Mista di Mare</h4>
-                                <span class="text-primary-accent font-bold text-lg">€35</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Un assortimento generoso di pesce e crostacei freschi grigliati, con un filo d'olio d'oliva e limone.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Trancio di Salmone al Forno con Asparagi</h4>
-                                <span class="text-primary-accent font-bold text-lg">€25</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Trancio di salmone Atlantico cotto al forno, servito con asparagi freschi di stagione.</p>
-                        </div>
+                        <p class="text-light-text text-sm mt-1">Mousse ricca e vellutata di cioccolato fondente, guarnita con frutti di bosco freschi.</p>
                     </div>
                 </div>
+            </div>
 
-                <div id="contorni" class="menu-category">
-                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Contorni</h3>
-                    <div class="space-y-7">
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Verdure Grigliate di Stagione</h4>
-                                <span class="text-primary-accent font-bold text-lg">€8</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Selezione fresca di verdure di stagione, grigliate alla perfezione.</p>
+            <div id="bevande" class="menu-category">
+                <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Bevande</h3>
+                <div class="space-y-7">
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Acqua Naturale/Frizzante</h4>
+                            <span class="text-primary-accent font-bold text-lg">€3</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Patate al Forno al Profumo di Rosmarino</h4>
-                                <span class="text-primary-accent font-bold text-lg">€7</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Patate croccanti, insaporite con rosmarino fresco e aglio.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Insalata Mista Gourmet</h4>
-                                <span class="text-primary-accent font-bold text-lg">€6</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Insalata fresca con olive taggiasche e pomodorini confit.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Spinaci Saltati all'Aglio</h4>
-                                <span class="text-primary-accent font-bold text-lg">€7</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Spinaci freschi saltati velocemente in padella con aglio e peperoncino.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Purè di Patate al Tartufo</h4>
-                                <span class="text-primary-accent font-bold text-lg">€9</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Purè di patate cremoso arricchito con un tocco di olio al tartufo bianco.</p>
-                        </div>
+                        <p class="text-light-text text-sm mt-1"></p>
                     </div>
-                </div>
-
-                <div id="dolci" class="menu-category">
-                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Dolci</h3>
-                    <div class="space-y-7">
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Crème Brûlée Classica</h4>
-                                <span class="text-primary-accent font-bold text-lg">€8</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Il classico dessert francese con la sua crosta caramellata e la morbida crema alla vaniglia del Madagascar.</p>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Coca Cola / Fanta / Sprite</h4>
+                            <span class="text-primary-accent font-bold text-lg">€4</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Mousse al Cioccolato Fondente</h4>
-                                <span class="text-primary-accent font-bold text-lg">€9</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Mousse ricca e vellutata al cioccolato fondente, servita con frutti di bosco freschi.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Tiramisù al Pistacchio</h4>
-                                <span class="text-primary-accent font-bold text-lg">€8</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Una rivisitazione del classico Tiramisù con crema al mascarpone e pasta di pistacchio.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Gelato Artigianale</h4>
-                                <span class="text-primary-accent font-bold text-lg">€6</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Tre gusti a scelta tra la nostra selezione di gelati artigianali (chiedere disponibilità).</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Panna Cotta ai Frutti di Bosco</h4>
-                                <span class="text-primary-accent font-bold text-lg">€7</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Delicata panna cotta fatta in casa, con una coulis fresca di frutti di bosco.</p>
-                        </div>
+                        <p class="text-light-text text-sm mt-1"></p>
                     </div>
-                </div>
-
-                <div id="bevande" class="menu-category">
-                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Bevande</h3>
-                    <div class="space-y-7">
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Acqua Naturale/Frizzante (0.75L)</h4>
-                                <span class="text-primary-accent font-bold text-lg">€3</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1"></p>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Succo di Frutta (vari gusti)</h4>
+                            <span class="text-primary-accent font-bold text-lg">€4</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Coca-Cola / Fanta / Sprite (lattina)</h4>
-                                <span class="text-primary-accent font-bold text-lg">€4</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1"></p>
+                        <p class="text-light-text text-sm mt-1"></p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Birra Artigianale Locale</h4>
+                            <span class="text-primary-accent font-bold text-lg">€7</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Succo di Frutta (arancia, ananas, pesca)</h4>
-                                <span class="text-primary-accent font-bold text-lg">€4</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1"></p>
+                        <p class="text-light-text text-sm mt-1">Selezione di birre artigianali del territorio.</p>
+                    </div>
+                    <div class="menu-item">
+                        <div class="flex justify-between items-baseline">
+                            <h4 class="font-display font-semibold text-dark-text text-xl">Calice di Vino della Casa</h4>
+                            <span class="text-primary-accent font-bold text-lg">€6</span>
                         </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Birra Artigianale Locale (0.33L)</h4>
-                                <span class="text-primary-accent font-bold text-lg">€7</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Selezione di birre artigianali del territorio laziale.</p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Caffè Espresso</h4>
-                                <span class="text-primary-accent font-bold text-lg">€2</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1"></p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Caffè Macchiato / Cappuccino</h4>
-                                <span class="text-primary-accent font-bold text-lg">€2.50</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1"></p>
-                        </div>
-                        <div class="menu-item">
-                            <div class="flex justify-between items-baseline">
-                                <h4 class="font-display font-semibold text-dark-text text-xl">Digestivo / Amaro</h4>
-                                <span class="text-primary-accent font-bold text-lg">€5</span>
-                            </div>
-                            <p class="text-light-text text-sm mt-1">Selezione di digestivi locali e internazionali.</p>
-                        </div>
+                        <p class="text-light-text text-sm mt-1">Vino bianco o rosso, selezione della casa.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const categoryButtons = document.querySelectorAll('.menu-category-button');
+        const menuCategories = document.querySelectorAll('.menu-category');
+
+        const showCategory = (categoryName) => {
+            menuCategories.forEach(category => {
+                if (category.id === categoryName) {
+                    category.classList.add('active');
+                } else {
+                    category.classList.remove('active');
+                }
+            });
+        };
+
+        const setActiveButton = (activeButton) => {
+            categoryButtons.forEach(button => {
+                button.classList.remove('active', 'bg-primary-accent', 'text-dark-blue');
+                button.classList.add('bg-light-gray-bg', 'text-dark-text', 'hover:bg-primary-accent', 'hover:text-dark-blue');
+            });
+            activeButton.classList.add('active', 'bg-primary-accent', 'text-dark-blue');
+            activeButton.classList.remove('bg-light-gray-bg', 'text-dark-text'); // Rimuovi solo le classi non attive
+        };
+
+        // Event listeners per i bottoni delle categorie
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const category = event.target.dataset.category;
+                showCategory(category);
+                setActiveButton(event.target);
+            });
+        });
+
+        // Inizializzazione: mostra la categoria "Antipasti" e imposta il bottone attivo all'avvio
+        const initialActiveButton = document.querySelector('.menu-category-button[data-category="antipasti"]');
+        if (initialActiveButton) {
+            initialActiveButton.click(); // Simula il click sul bottone degli antipasti
+        }
+    });
+</script>
 
 </body>
 </html>
@@ -815,7 +812,7 @@
             </div>
             <div class="flex flex-col items-center text-center p-6 bg-light-gray-bg rounded-lg shadow-md">
                 <div class="text-primary-accent text-4xl mb-4">
-                    <i class="fas fa-phone-alt mr-2 text-primary-accent"></i>
+                    <i class="fa-solid fa-phone mr-2 text-primary-accent"></i>
                 </div>
                 <h3 class="font-display font-bold text-dark-blue text-xl mb-2">Telefono</h3>
                 <p class="text-light-text"><a href="tel:+390771123456" class="hover:text-primary-accent transition duration-300">+39 3664850692
@@ -873,7 +870,7 @@
                     <i class="fas fa-map-marker-alt mr-2 text-primary-accent"></i> Via Marina, 123, 04024 Gaeta (LT)
                 </p>
                 <p class="text-sm mb-2 text-warm-white text-opacity-80">
-                    <i class="fas fa-phone-alt mr-2 text-primary-accent"></i> <a href="tel:+393341165318" class="hover:text-primary-accent transition duration-300">3664850692
+                    <i class="fa-solid fa-phone mr-2 text-primary-accent"></i> <a href="tel:+393341165318" class="hover:text-primary-accent transition duration-300">3664850692
 </a>
                 </p>
                 <p class="text-sm mb-2 text-warm-white text-opacity-80">
