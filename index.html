@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Francese - Ristorante di pesce a Gaeta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // Tailwind Configuration
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-accent': '#B87333', // Rame Brunito (This is your desired main accent color)
+                        'dark-blue': '#0A1128',     // Blu Profondo per testo principale/sfondo scuro
+                        'light-gray-bg': '#F8F8F8', // Tortora Chiaro per sfondi secondari
+                        'warm-white': '#FEFBF3',    // Avorio per il body
+                        'dark-text': '#333333',     // Grigio Antracite per testo primario
+                        'light-text': '#777777',    // Grigio Medio per testo secondario
+                    },
+                    fontFamily: {
+                        display: ['Playfair Display', 'serif'],
+                        body: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* General page styles */
+        .hero-video {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .hero-video video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 0;
+            object-fit: cover;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        .dish-card:hover .dish-overlay {
+            opacity: 1;
+        }
+        .dish-overlay {
+            transition: all 0.4s ease-in-out;
+        }
+        .menu-category {
+            scroll-margin-top: 100px;
+        }
+        .gallery-item {
+            transition: all 0.3s ease;
+        }
+        .gallery-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .testimonial-card {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: theme('colors.primary-accent');
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        .active-nav:after {
+            width: 100%;
+        }
+
+        /* Styles for select options in forms */
+        select option {
+            background-color: theme('colors.dark-blue');
+            color: theme('colors.warm-white');
+        }
+        select {
+            color: theme('colors.warm-white');
+        }
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Menu-specific styles (now integrated) */
+
+        /* Styles for category buttons */
+        .menu-category-button {
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* Active button style (uses Tailwind's primary-accent which is now Rame Brunito) */
+        .menu-category-button.active {
+            background-color: theme('colors.primary-accent') !important; /* Forces the background color from Tailwind config */
+            color: theme('colors.dark-blue') !important; /* Text color for contrast */
+        }
+
+        /* Hide menu categories by default */
+        .menu-category {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Show active menu category */
+        .menu-category.active {
+            display: grid;
+            opacity: 1;
+        }
+
+        @media (max-width: 767px) {
+            .menu-category.active {
+                display: block;
+            }
+        }
+
+        /* Custom thin scrollbar for menu buttons */
+        .thin-scrollbar-container {
+            overflow-x: auto;
+            scrollbar-width: thin; /* For Firefox */
+            scrollbar-color: theme('colors.primary-accent') transparent; /* Thumb and track color for Firefox */
+        }
+
+        /* Webkit browsers (Chrome, Safari) scrollbar styling */
+        .thin-scrollbar-container::-webkit-scrollbar {
+            height: 4px; /* Height of the scrollbar */
+        }
+        .thin-scrollbar-container::-webkit-scrollbar-track {
+            background: transparent; /* Transparent track */
+        }
+        .thin-scrollbar-container::-webkit-scrollbar-thumb {
+            background-color: theme('colors.primary-accent'); /* Scrollbar color from Tailwind config */
+            border-radius: 20px; /* Rounded corners */
+            border: 1px solid theme('colors.primary-accent'); /* Thin border of the same color */
+        }
+        /* Hide default scrollbar when not in use for a cleaner look (cross-browser) */
+        .thin-scrollbar-container {
+            -ms-overflow-style: -ms-autohiding-scrollbar; /* IE/Edge */
+        }
+    </style>
+</head>
+<body class="font-body bg-warm-white text-dark-text">
+    <nav class="fixed w-full bg-white bg-opacity-95 shadow-sm z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <span class="text-3xl font-display font-bold text-dark-blue">La Francese</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="nav-link active-nav px-3 py-2 text-sm font-medium text-dark-blue">Home</a>
+                        <a href="#about" class="nav-link px-3 py-2 text-sm font-medium text-dark-blue">Chi Siamo</a>
+                        <a href="#menu" class="nav-link px-3 py-2 text-sm font-medium text-dark-blue">Menu</a>
+                        <a href="#gallery" class="nav-link px-3 py-2 text-sm font-medium text-dark-blue">Galleria</a>
+                        <a href="#events" class="nav-link px-3 py-2 text-sm font-medium text-dark-blue">Eventi</a>
+                        <a href="#contact" class="nav-link px-3 py-2 text-sm font-medium text-dark-blue">Contatti</a>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <a href="#reservation" class="bg-primary-accent text-dark-blue px-6 py-2 rounded-full font-medium hover:bg-opacity-90 transition duration-300 hover:scale-105 transform">
+                        Prenota
+                    </a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-dark-blue focus:outline-none">
+                        <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 text-base font-medium text-dark-blue">Home</a>
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-dark-blue">Chi Siamo</a>
+                <a href="#menu" class="block px-3 py-2 text-base font-medium text-dark-blue">Menu</a>
+                <a href="#gallery" class="block px-3 py-2 text-base font-medium text-dark-blue">Galleria</a>
+                <a href="#events" class="block px-3 py-2 text-base font-medium text-dark-blue">Eventi</a>
+                <a href="#contact" class="block px-3 py-2 text-base font-medium text-dark-blue">Contatti</a>
+                <a href="#reservation" class="block px-3 py-2 text-base font-medium text-dark-blue">Prenota</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-video">
+        <video autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-restaurant-with-tables-and-chairs-1580-large.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+      <div class="hero-content h-full flex items-center justify-center bg-dark-blue bg-opacity-50" style="background-image: url('https://i.imgur.com/qQT66Zm.png'); background-size: cover; background-position: center;">
+    <div class="text-center px-4 md:px-0">
+        <h1 class="text-5xl md:text-7xl font-display font-bold text-white mb-4 tracking-wide">La Francese</h1>
+        <p class="text-xl md:text-2xl text-white font-light mb-8 max-w-3xl mx-auto">L'eccellenza del mare di Gaeta con un tocco di raffinata cucina francese.</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="#reservation" class="bg-primary-accent text-dark-blue px-8 py-3 rounded-full font-semibold hover:bg-opacity-90 transition duration-300 hover:scale-105 transform">
+                Prenota un tavolo
+            </a>
+            <a href="#menu" class="bg-transparent border-2 border-white border-opacity-60 text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:bg-opacity-10 hover:text-white transition duration-300 hover:scale-105 transform">
+                Scopri il Menu
+            </a>
+        </div>
+</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-display font-bold text-dark-blue mb-4">Benvenuti a La Francese</h2>
+            <div class="w-16 h-0.5 bg-primary-accent mx-auto mb-6"></div>
+            <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
+                Nel cuore di Gaeta, La Francese unisce la **freschezza sublime del pescato locale** alla raffinatezza inconfondibile della **cucina francese**. Ogni piatto è una creazione, un racconto di tradizione e innovazione, realizzato con ingredienti selezionati e una presentazione che eleva l'arte culinaria a pura poesia.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            <div class="dish-card relative overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/Dyo1cj4.jpeg" alt="Branzino alla Provenzale" class="w-full h-64 object-cover filter brightness-95">
+                <div class="dish-overlay absolute inset-0 bg-dark-blue bg-opacity-70 backdrop-filter backdrop-blur-sm flex items-center justify-center opacity-0">
+                    <div class="text-center p-4">
+                        <h3 class="text-white text-xl font-display font-semibold">Catalana di Crostacei</h3>
+                        <p class="text-white text-opacity-90 mt-2 font-light">Gamberi, mazzancolle e verdure croccanti, serviti freddi con una citronette leggera che ne esalta tutta la freschezza.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dish-card relative overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/36xcOP9.jpeg" alt="Risotto ai Frutti di Mare" class="w-full h-64 object-cover filter brightness-95">
+                <div class="dish-overlay absolute inset-0 bg-dark-blue bg-opacity-70 backdrop-filter backdrop-blur-sm flex items-center justify-center opacity-0">
+                    <div class="text-center p-4">
+                        <h3 class="text-white text-xl font-display font-semibold">Cozze Gratinate</h3>
+                        <p class="text-white text-opacity-90 mt-2 font-light">Cozze aperte al forno con una croccante panatura aromatica, servite calde per esaltarne la sapidità e la consistenza succulenta.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dish-card relative overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/r95N4Di.jpeg" alt="Crème Brûlée" class="w-full h-64 object-cover filter brightness-95">
+                <div class="dish-overlay absolute inset-0 bg-dark-blue bg-opacity-70 backdrop-filter backdrop-blur-sm flex items-center justify-center opacity-0">
+                    <div class="text-center p-4">
+                        <h3 class="text-white text-xl font-display font-semibold">Mazzancolle alla Marinara</h3>
+                        <p class="text-white text-opacity-90 mt-2 font-light">Mazzancolle spadellate in un sugo leggero e saporito di pomodoro fresco, aglio, prezzemolo e vino bianco, servite calde per esaltarne il gusto intenso e la tenerezza.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 bg-light-gray-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-display font-bold text-dark-blue mb-4">La Nostra Storia</h2>
+                <div class="w-16 h-0.5 bg-primary-accent mx-auto mb-6"></div>
+            </div>
+
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <img src="https://i.imgur.com/EyH61IA.jpeg" alt="Interni del ristorante La Francese" class="rounded-lg shadow-xl w-full">
+                </div>
+                <div class="lg:w-1/2">
+                    <h3 class="text-2xl font-display font-bold text-dark-blue mb-4">L'essenza della cucina francese incontra il mare di Gaeta</h3>
+                    <p class="text-light-text mb-4 leading-relaxed">
+                        Fondata nel 2010, **La Francese** nasce dalla passione per la cucina raffinata e il desiderio di portare a Gaeta un'esperienza gastronomica unica, dove la tradizione marinara locale incontra l'eleganza della gastronomia d'Oltralpe.
+                    </p>
+                    <p class="text-light-text mb-4 leading-relaxed">
+                        Il nostro nome è un omaggio alla raffinata tradizione culinaria francese e alla filosofia che ci guida: unire la freschezza ineguagliabile del pescato del giorno con tecniche e presentazioni che evocano l'eleganza dei migliori bistrot parigini.
+                    </p>
+                    <p class="text-light-text mb-6 leading-relaxed">
+                        Ogni mattina, il nostro chef seleziona personalmente il pescato direttamente dai pescatori locali, garantendo la massima freschezza e una qualità eccelsa. La nostra cucina rispetta la stagionalità e valorizza ogni ingrediente con preparazioni che esaltano i sapori autentici e sorprendono il palato.
+                    </p>
+
+                    <div class="flex items-center mt-8">
+                        <img src="https://i.imgur.com/HDgQoCQ.jpeg" alt="Chef Marco De Santis" class="w-24 h-24 rounded-full object-cover border-4 border-primary-accent shadow-md">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-dark-blue text-xl">Chef Angelo Chinappi</h4>
+                            <p class="text-light-text text-sm">Formazione tra Parigi e Roma, 15 anni di esperienza nella cucina d'autore.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il Nostro Menu</title>
+    <link href="/path/to/your/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        /* Definizione dei colori di Tailwind per renderli disponibili anche nel CSS inline, 
+           o assicurati che il tuo tailwind.config.js sia correttamente compilato.
+           Se non usi un processo di build per il CSS, devi definire i colori qui. */
+        :root {
+            --color-dark-blue: #1a202c;
+            --color-primary-accent: #B87333; /* Rame Brunito */
+            --color-light-text: #718096;
+            --color-light-gray-bg: #f7fafc;
+            --color-dark-text: #2d3748;
+        }
+
+        /* Utilizzo di theme() in CSS puro è problematico senza PostCSS e plugin Tailwind.
+           Se stai incollando questo direttamente in un HTML senza un processo di build
+           di Tailwind, devi usare i valori esadecimali diretti o le variabili CSS.
+           Ho aggiornato per usare i codici esadecimali diretti. */
+
+        /* Custom thin scrollbar for menu buttons */
+        .thin-scrollbar-container {
+            overflow-x: auto;
+            scrollbar-width: thin; /* Per Firefox */
+            scrollbar-color: #B87333 transparent; /* Colore thumb e track per Firefox */
+            /* Per Edge legacy / IE, ma è meno rilevante oggi */
+            -ms-overflow-style: -ms-autohiding-scrollbar; 
+        }
+
+        /* Stili della scrollbar per browser basati su Webkit (Chrome, Safari, Edge moderno) */
+        .thin-scrollbar-container::-webkit-scrollbar {
+            height: 4px; /* Altezza della scrollbar orizzontale */
+        }
+        .thin-scrollbar-container::-webkit-scrollbar-track {
+            background: transparent; /* Track trasparente */
+        }
+        .thin-scrollbar-container::-webkit-scrollbar-thumb {
+            /* Colore del "pollice" della scrollbar - FONDAMENTALE */
+            background-color: #B87333 !important; 
+            border-radius: 20px; 
+            border: 1px solid #B87333 !important; /* Bordo dello stesso colore per coerenza */
+        }
+    </style>
+</head>
+<body>
+
+    <section id="menu" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-dark-blue mb-4">Il Nostro Menu</h2>
+                <div class="w-16 h-1 bg-primary-accent mx-auto mb-6"></div>
+                <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
+                    Un viaggio gastronomico tra i sapori autentici del mare e la raffinata arte culinaria francese.
+                </p>
+                <a href="#" class="inline-block mt-6 px-6 py-3 bg-dark-blue text-white rounded-lg shadow-lg hover:bg-primary-accent hover:text-dark-blue transition duration-300 font-bold text-lg">
+                    Scarica il menu completo in PDF <i class="fas fa-download ml-2"></i>
+                </a>
+            </div>
+
+            <div class="thin-scrollbar-container pb-4 mb-8">
+                <div class="flex space-x-3 md:space-x-4 lg:space-x-6 flex-nowrap justify-start md:justify-center thin-scrollbar">
+                    <button class="menu-category-button px-5 py-2 bg-primary-accent text-dark-blue rounded-full whitespace-nowrap text-sm md:text-base font-semibold active" data-category="antipasti">Antipasti</button>
+                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="primi">Primi</button>
+                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="secondi">Secondi</button>
+                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="contorni">Contorni</button>
+                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="dolci">Dolci</button>
+                    <button class="menu-category-button px-5 py-2 bg-light-gray-bg text-dark-text rounded-full whitespace-nowrap text-sm md:text-base font-semibold hover:bg-primary-accent hover:text-dark-blue" data-category="bevande">Bevande</button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-x-12 gap-y-10">
+                <div id="antipasti" class="menu-category active">
+                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Antipasti</h3>
+                    <div class="space-y-7">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Tartare di Tonno</h4>
+                                <span class="text-primary-accent font-bold text-lg">€16</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Tonno fresco di prima scelta, avocado, semi di sesamo e un tocco di salsa allo zenzero e lime.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Cozze alla Marinara</h4>
+                                <span class="text-primary-accent font-bold text-lg">€14</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Le nostre cozze locali, delicatamente preparate con pomodoro datterino, aglio profumato e prezzemolo fresco.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Bruschetta al Salmone Affumicato</h4>
+                                <span class="text-primary-accent font-bold text-lg">€12</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Fette di pane tostato, salmone affumicato di qualità superiore, crema di formaggio fresco e aneto.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Carpaccio di Polpo con Patate</h4>
+                                <span class="text-primary-accent font-bold text-lg">€15</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Sottili fette di polpo lessato, servite con patate novelle e emulsione al limone e prezzemolo.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Ostriche Fines de Claire (3 pezzi)</h4>
+                                <span class="text-primary-accent font-bold text-lg">€18</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Tre ostriche freschissime Fines de Claire, servite con vinaigrette allo scalogno.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="primi" class="menu-category">
+                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Primi</h3>
+                    <div class="space-y-7">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Spaghetti alle Vongole Veraci</h4>
+                                <span class="text-primary-accent font-bold text-lg">€18</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Pasta artigianale con vongole veraci, un soffritto leggero di aglio, prezzemolo e un pizzico di peperoncino.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Risotto alla Pescatora</h4>
+                                <span class="text-primary-accent font-bold text-lg">€20</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Riso Carnaroli con un ricco misto di frutti di mare freschi e un velo di zafferano.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Ravioli di Branzino Fatti in Casa</h4>
+                                <span class="text-primary-accent font-bold text-lg">€22</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Pasta fresca ripiena di branzino, condita con burro fuso aromatizzato alla salvia fresca.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Gnocchi Neri con Gamberi e Zucchine</h4>
+                                <span class="text-primary-accent font-bold text-lg">€19</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Gnocchi artigianali al nero di seppia, spadellati con gamberi freschi e zucchine croccanti.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Zuppa di Pesce del Giorno</h4>
+                                <span class="text-primary-accent font-bold text-lg">€24</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Un ricco brodo di pesce con varietà di pescato fresco, servito con crostini di pane.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="secondi" class="menu-category">
+                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Secondi</h3>
+                    <div class="space-y-7">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Filetto di Branzino alla Provenzale</h4>
+                                <span class="text-primary-accent font-bold text-lg">€28</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Delicato filetto di branzino al forno, accompagnato da pomodori confit, olive nere e profumi di Provenza.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Orata al Cartoccio con Verdure</h4>
+                                <span class="text-primary-accent font-bold text-bold text-lg">€26</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Orata intera cotta al cartoccio con patate novelle, pomodorini e un bouquet di erbe aromatiche.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Filetto di Manzo alla Rossini</h4>
+                                <span class="text-primary-accent font-bold text-lg">€32</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Pregiato filetto di manzo, paté de foie gras e scaglie di tartufo nero estivo.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Grigliata Mista di Mare</h4>
+                                <span class="text-primary-accent font-bold text-lg">€35</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Un assortimento generoso di pesce e crostacei freschi grigliati, con un filo d'olio d'oliva e limone.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Trancio di Salmone al Forno con Asparagi</h4>
+                                <span class="text-primary-accent font-bold text-lg">€25</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Trancio di salmone Atlantico cotto al forno, servito con asparagi freschi di stagione.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="contorni" class="menu-category">
+                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Contorni</h3>
+                    <div class="space-y-7">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Verdure Grigliate di Stagione</h4>
+                                <span class="text-primary-accent font-bold text-lg">€8</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Selezione fresca di verdure di stagione, grigliate alla perfezione.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Patate al Forno al Profumo di Rosmarino</h4>
+                                <span class="text-primary-accent font-bold text-lg">€7</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Patate croccanti, insaporite con rosmarino fresco e aglio.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Insalata Mista Gourmet</h4>
+                                <span class="text-primary-accent font-bold text-lg">€6</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Insalata fresca con olive taggiasche e pomodorini confit.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Spinaci Saltati all'Aglio</h4>
+                                <span class="text-primary-accent font-bold text-lg">€7</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Spinaci freschi saltati velocemente in padella con aglio e peperoncino.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Purè di Patate al Tartufo</h4>
+                                <span class="text-primary-accent font-bold text-lg">€9</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Purè di patate cremoso arricchito con un tocco di olio al tartufo bianco.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dolci" class="menu-category">
+                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Dolci</h3>
+                    <div class="space-y-7">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Crème Brûlée Classica</h4>
+                                <span class="text-primary-accent font-bold text-lg">€8</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Il classico dessert francese con la sua crosta caramellata e la morbida crema alla vaniglia del Madagascar.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Mousse al Cioccolato Fondente</h4>
+                                <span class="text-primary-accent font-bold text-lg">€9</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Mousse ricca e vellutata al cioccolato fondente, servita con frutti di bosco freschi.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Tiramisù al Pistacchio</h4>
+                                <span class="text-primary-accent font-bold text-lg">€8</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Una rivisitazione del classico Tiramisù con crema al mascarpone e pasta di pistacchio.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Gelato Artigianale</h4>
+                                <span class="text-primary-accent font-bold text-lg">€6</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Tre gusti a scelta tra la nostra selezione di gelati artigianali (chiedere disponibilità).</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Panna Cotta ai Frutti di Bosco</h4>
+                                <span class="text-primary-accent font-bold text-lg">€7</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Delicata panna cotta fatta in casa, con una coulis fresca di frutti di bosco.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bevande" class="menu-category">
+                    <h3 class="text-3xl font-display font-bold text-dark-blue mb-6 pb-2 border-b border-gray-200">Bevande</h3>
+                    <div class="space-y-7">
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Acqua Naturale/Frizzante (0.75L)</h4>
+                                <span class="text-primary-accent font-bold text-lg">€3</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1"></p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Coca-Cola / Fanta / Sprite (lattina)</h4>
+                                <span class="text-primary-accent font-bold text-lg">€4</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1"></p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Succo di Frutta (arancia, ananas, pesca)</h4>
+                                <span class="text-primary-accent font-bold text-lg">€4</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1"></p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Birra Artigianale Locale (0.33L)</h4>
+                                <span class="text-primary-accent font-bold text-lg">€7</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Selezione di birre artigianali del territorio laziale.</p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Caffè Espresso</h4>
+                                <span class="text-primary-accent font-bold text-lg">€2</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1"></p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Caffè Macchiato / Cappuccino</h4>
+                                <span class="text-primary-accent font-bold text-lg">€2.50</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1"></p>
+                        </div>
+                        <div class="menu-item">
+                            <div class="flex justify-between items-baseline">
+                                <h4 class="font-display font-semibold text-dark-text text-xl">Digestivo / Amaro</h4>
+                                <span class="text-primary-accent font-bold text-lg">€5</span>
+                            </div>
+                            <p class="text-light-text text-sm mt-1">Selezione di digestivi locali e internazionali.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
+
+
+<section id="gallery" class="py-16 bg-light-gray-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-display font-bold text-dark-blue mb-4">La Nostra Galleria</h2>
+            <div class="w-16 h-0.5 bg-primary-accent mx-auto mb-6"></div>
+            <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
+                Scopri gli interni accoglienti del nostro ristorante, la presentazione dei nostri piatti d'autore e i momenti speciali.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/rxlglpA.jpeg" alt="Interno del ristorante 1" class="w-full h-60 object-cover">
+            </div>
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/fGJfVrV.jpeg" alt="Interno del ristorante 2" class="w-full h-60 object-cover">
+            </div>
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/iVgx4H9.jpeg" alt="Piatto di pesce" class="w-full h-60 object-cover">
+            </div>
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/wdkaTU0.jpeg" alt="Piatto gourmet" class="w-full h-60 object-cover">
+            </div>
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/rblo2Hd.jpeg" alt="Tavolo apparecchiato" class="w-full h-60 object-cover">
+            </div>
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/wmt2vHN.jpeg" alt="Dessert artistico" class="w-full h-60 object-cover">
+            </div>
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/DY0imjZ.jpeg" alt="Vini selezionati" class="w-full h-60 object-cover">
+            </div>
+            <div class="gallery-item overflow-hidden rounded-lg shadow-lg">
+                <img src="https://i.imgur.com/lc5KENn.jpeg" alt="Vista esterna del ristorante" class="w-full h-60 object-cover">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-warm-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-display font-bold text-dark-blue mb-4">Dicono di Noi</h2>
+            <div class="w-16 h-0.5 bg-primary-accent mx-auto mb-6"></div>
+            <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
+                L'opinione dei nostri ospiti è la nostra più grande ricompensa.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="testimonial-card bg-white p-8 rounded-lg shadow-md text-center">
+                <i class="fas fa-quote-left text-primary-accent text-3xl mb-4"></i>
+                <p class="text-light-text italic mb-6">"Un'esperienza culinaria indimenticabile! Il pesce freschissimo e la cura nei dettagli dei piatti mi hanno davvero colpito. Tornerò sicuramente!"</p>
+                <p class="font-bold text-dark-blue">- Anna Rossi</p>
+                <div class="text-primary-accent mt-2">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+            </div>
+            <div class="testimonial-card bg-white p-8 rounded-lg shadow-md text-center">
+                <i class="fas fa-quote-left text-primary-accent text-3xl mb-4"></i>
+                <p class="text-light-text italic mb-6">"Servizio impeccabile e atmosfera elegante. Ogni portata era un capolavoro. La Crème Brûlée è un must assoluto!"</p>
+                <p class="font-bold text-dark-blue">- Marco Bianchi</p>
+                <div class="text-primary-accent mt-2">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+            <div class="testimonial-card bg-white p-8 rounded-lg shadow-md text-center">
+                <i class="fas fa-quote-left text-primary-accent text-3xl mb-4"></i>
+                <p class="text-light-text italic mb-6">"Adoro la combinazione di sapori locali e francesi. La grigliata di mare era sublime. Il miglior ristorante di pesce a Gaeta!"</p>
+                <p class="font-bold text-dark-blue">- Giulia Verdi</p>
+                <div class="text-primary-accent mt-2">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="events" class="py-16 bg-light-gray-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-display font-bold text-dark-blue mb-4">Eventi Speciali e Cene a Tema</h2>
+            <div class="w-16 h-0.5 bg-primary-accent mx-auto mb-6"></div>
+            <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
+                Organizziamo serate uniche per celebrare la buona cucina e i momenti speciali.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
+                <img src="https://i.imgur.com/53m4mQ1.jpeg" alt="Serata degustazione vini" class="w-full md:w-1/2 h-64 md:h-auto object-cover">
+                <div class="p-8 md:w-1/2">
+                    <h3 class="text-2xl font-display font-bold text-dark-blue mb-3">Serata Degustazione Vini Marini</h3>
+                    <p class="text-light-text mb-4">Un viaggio sensoriale tra i migliori vini bianchi del Lazio e della Campania, in abbinamento a cruditè di mare e selezioni di formaggi freschi.</p>
+                    <ul class="list-disc list-inside text-light-text mb-4">
+                        <li>Data: 15 Settembre 2024</li>
+                        <li>Orario: 20:00</li>
+                        <li>Prezzo: €60 a persona</li>
+                    </ul>
+                    <a href="#reservation" class="inline-block bg-primary-accent text-dark-blue px-6 py-2 rounded-full font-medium hover:bg-opacity-90 transition duration-300">
+                        Prenota ora
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
+                <img src="https://i.imgur.com/5voasyK.jpeg" alt="Cena romantica" class="w-full md:w-1/2 h-64 md:h-auto object-cover">
+                <div class="p-8 md:w-1/2">
+                    <h3 class="text-2xl font-display font-bold text-dark-blue mb-3">Capodanno 2025</h3>
+                    <p class="text-light-text mb-4">Una serata esclusiva per salutare il nuovo anno, con un menù gourmet, atmosfera calda a lume di candela e sottofondo musicale. Ideale per festeggiare in tranquillità e stile.</p>
+                    <ul class="list-disc list-inside text-light-text mb-4">
+                        
+                        <li>Orario: Dalle 20:30</li>
+                        <li>Prezzo: €75 a coppia</li>
+                    </ul>
+                    <a href="#reservation" class="inline-block bg-primary-accent text-dark-blue px-6 py-2 rounded-full font-medium hover:bg-opacity-90 transition duration-300">
+                        Richiedi disponibilità
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="reservation" class="py-16 bg-dark-blue text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-display font-bold mb-4">Prenota un Tavolo</h2>
+            <div class="w-16 h-0.5 bg-primary-accent mx-auto mb-6"></div>
+            <p class="text-lg text-white text-opacity-80 max-w-3xl mx-auto leading-relaxed">
+                Assicurati il tuo posto nel nostro ristorante per vivere un'esperienza gastronomica indimenticabile, curata in ogni dettaglio.
+            </p>
+        </div>
+
+        <div class="mt-12 text-center">
+            <h3 class="text-3xl font-display font-bold mb-4">Prenota Facilmente!</h3>
+            <p class="text-xl text-white text-opacity-90 mb-4">
+                Chiamaci al <a href="tel:+393341165318" class="text-primary-accent hover:text-white transition duration-300">3664850692
+</a> per prenotare il tuo tavolo.
+            </p>
+            <p class="text-sm opacity-70">Siamo disponibili per prenotazioni telefoniche dalle 10:00 alle 22:00.</p>
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="py-16 bg-warm-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-display font-bold text-dark-blue mb-4">Contattaci</h2>
+            <div class="w-16 h-0.5 bg-primary-accent mx-auto mb-6"></div>
+            <p class="text-lg text-light-text max-w-3xl mx-auto leading-relaxed">
+                Siamo qui per rispondere a tutte le tue domande.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="flex flex-col items-center text-center p-6 bg-light-gray-bg rounded-lg shadow-md">
+                <div class="text-primary-accent text-4xl mb-4">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3 class="font-display font-bold text-dark-blue text-xl mb-2">Indirizzo</h3>
+                <p class="text-light-text">Via Marina di Serapo, 10</p>
+                <p class="text-light-text">04024 Gaeta (LT), Italia</p>
+            </div>
+            <div class="flex flex-col items-center text-center p-6 bg-light-gray-bg rounded-lg shadow-md">
+                <div class="text-primary-accent text-4xl mb-4">
+                    <i class="fas fa-phone-alt mr-2 text-primary-accent"></i>
+                </div>
+                <h3 class="font-display font-bold text-dark-blue text-xl mb-2">Telefono</h3>
+                <p class="text-light-text"><a href="tel:+390771123456" class="hover:text-primary-accent transition duration-300">+39 3664850692
+</a></p>
+                <p class="text-light-text">Dal Mar al Dom: 12:00-15:00 / 19:00-23:00</p>
+            </div>
+            <div class="flex flex-col items-center text-center p-6 bg-light-gray-bg rounded-lg shadow-md">
+                <div class="text-primary-accent text-4xl mb-4">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3 class="font-display font-bold text-dark-blue text-xl mb-2">Email</h3>
+                <p class="text-light-text"><a href="mailto:info@lafrancesegaeta.it" class="hover:text-primary-accent transition duration-300">info@lafrancesegaeta.it</a></p>
+                <p class="text-light-text">Rispondiamo entro 24 ore</p>
+            </div>
+        </div>
+
+        <div class="mt-12">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000.7513809630737!2d13.565384415414872!3d41.21175657927503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133604f8b9e6f1f7%3A0x6b7a9f7e8b6b7a9f!2sVia%20Marina%20di%20Serapo%2C%20Gaeta%20LT!5e0!3m2!1sit!2sit!4v1678912345678!5m2!1sit!2sit"
+                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="rounded-lg shadow-lg">
+            </iframe>
+        </div>
+    </div>
+</section>
+
+    <footer class="bg-dark-blue text-warm-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="text-2xl font-display font-bold text-primary-accent mb-4">La Francese</h3>
+                <p class="text-sm leading-relaxed text-warm-white text-opacity-80">
+                    L'eccellenza del mare di Gaeta e la raffinatezza della cucina francese si fondono in un'esperienza culinaria indimenticabile.
+                </p>
+                <div class="flex justify-center md:justify-start space-x-4 mt-6">
+                    <a href="#" class="text-white hover:text-primary-accent transition duration-300 text-xl"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white hover:text-primary-accent transition duration-300 text-xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white hover:text-primary-accent transition duration-300 text-xl"><i class="fab fa-tripadvisor"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-display font-bold text-primary-accent mb-4">Link Utili</h3>
+                <ul class="space-y-2 text-sm text-warm-white text-opacity-80">
+                    <li><a href="#home" class="hover:text-primary-accent transition duration-300">Home</a></li>
+                    <li><a href="#about" class="hover:text-primary-accent transition duration-300">Chi Siamo</a></li>
+                    <li><a href="#menu" class="hover:text-primary-accent transition duration-300">Menu</a></li>
+                    <li><a href="#gallery" class="hover:text-primary-accent transition duration-300">Galleria</a></li>
+                    <li><a href="#events" class="hover:text-primary-accent transition duration-300">Eventi</a></li>
+                    <li><a href="#contact" class="hover:text-primary-accent transition duration-300">Contatti</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-display font-bold text-primary-accent mb-4">Orari e Contatti</h3>
+                <p class="text-sm mb-2 text-warm-white text-opacity-80">
+                    <i class="fas fa-map-marker-alt mr-2 text-primary-accent"></i> Via Marina, 123, 04024 Gaeta (LT)
+                </p>
+                <p class="text-sm mb-2 text-warm-white text-opacity-80">
+                    <i class="fas fa-phone-alt mr-2 text-primary-accent"></i> <a href="tel:+393341165318" class="hover:text-primary-accent transition duration-300">3664850692
+</a>
+                </p>
+                <p class="text-sm mb-2 text-warm-white text-opacity-80">
+                    <i class="fas fa-envelope mr-2 text-primary-accent"></i> <a href="mailto:info@lafrancese.it" class="hover:text-primary-accent transition duration-300">info@lafrancese.it</a>
+                </p>
+                <p class="text-sm mt-4 text-warm-white text-opacity-80">
+                    <strong class="text-primary-accent">Orari di Apertura:</strong><br>
+                    Martedì - Domenica: 12:30 - 14:30 | 19:30 - 22:30<br>
+                    Lunedì: Chiuso
+                </p>
+            </div>
+        </div>
+        <div class="mt-8 pt-8 border-t border-white border-opacity-10 text-center text-sm text-warm-white text-opacity-60">
+            © 2025 La Francese. Tutti i diritti riservati. Design by Michael Liguori
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Highlight active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100; // Adjust offset for fixed header
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop && pageYOffset < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active-nav');
+                }
+            });
+        });
+
+        // Dynamic menu category active state (optional, more advanced)
+        const menuCategoryLinks = document.querySelectorAll('.menu-category-link');
+        const menuCategories = document.querySelectorAll('.menu-category');
+
+        menuCategoryLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                menuCategoryLinks.forEach(l => {
+                    l.classList.remove('bg-dark-blue', 'text-white');
+                    l.classList.add('bg-light-gray-bg', 'text-dark-text');
+                });
+                this.classList.remove('bg-light-gray-bg', 'text-dark-text');
+                this.classList.add('bg-dark-blue', 'text-white');
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Set initial active menu category
+        if (window.location.hash && document.querySelector(window.location.hash + '.menu-category')) {
+            const initialCategoryLink = document.querySelector(`.menu-category-link[href="${window.location.hash}"]`);
+            if (initialCategoryLink) {
+                menuCategoryLinks.forEach(l => {
+                    l.classList.remove('bg-dark-blue', 'text-white');
+                    l.classList.add('bg-light-gray-bg', 'text-dark-text');
+                });
+                initialCategoryLink.classList.remove('bg-light-gray-bg', 'text-dark-text');
+                initialCategoryLink.classList.add('bg-dark-blue', 'text-white');
+            }
+        }
+    </script>
+</body>
+</html>
